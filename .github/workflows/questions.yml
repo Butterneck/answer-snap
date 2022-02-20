@@ -4,21 +4,18 @@ on:
   push:
     paths:
       - questions/**/*
-
-env:
-  APOLLO_GRAPH_NAME: Answer-snap
-  APOLLO_GRAPH_VARIANT: current
-  APOLLO_SCHEMA_REPORTING: true
-  MONGODB_DB_NAME: answer-snap
+      - .github/workflows/questions.yml
+      - .github/workflows/apollo_federated_service.yml
 
 jobs:
   call-deploy:
     uses: ./.github/workflows/apollo_federated_service.yml
     with:
-      APOLLO_GRAPH_NAME: ${{ env.APOLLO_GRAPH_NAME }}
-      APOLLO_GRAPH_VARIANT: ${{ env.APOLLO_GRAPH_VARIANT }}
-      APOLLO_SCHEMA_REPORTING: ${{ env.APOLLO_SCHEMA_REPORTING }}
-      MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}
+      SERVICE_BASE_PATH: questions
+      APOLLO_GRAPH_NAME: Answer-snap
+      _APOLLO_GRAPH_VARIANT: current
+      APOLLO_SCHEMA_REPORTING: true
+      MONGODB_DB_NAME: answer-snap
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -2,10 +2,13 @@ name: Deploy apollo sevice on AWS
 on:
   workflow_call:
     inputs:
+      SERVICE_BASE_PATH:
+        required: true
+        type: string
       APOLLO_GRAPH_NAME:
         required: true
         type: string
-      APOLLO_GRAPH_VARIANT:
+      _APOLLO_GRAPH_VARIANT:
         required: true
         type: string
       APOLLO_SCHEMA_REPORTING:
@@ -28,6 +31,9 @@ on:
 jobs:
   deploy-aws:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.SERVICE_BASE_PATH }}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -47,4 +53,4 @@ jobs:
         run: node_modules/.bin/graphql-codegen
 
       - name: Deploy
-        run: APOLLO_GRAPH_NAME=${{ inputs.APOLLO_GRAPH_NAME }} APOLLO_KEY=${{ secrets.APOLLO_KEY }} APOLLO_GRAPH_VARIANT=${{ inputs.APOLLO_GRAPH_VARIANT }} APOLLO_SCHEMA_REPORTING=${{ inputs.APOLLO_SCHEMA_REPORTING }} MONGODB_DB_NAME=${{ inputs.MONGODB_DB_NAME }} MONGODB_URL=${{ secrets.MONGODB_URL }} sls deploy --verbose
+        run: APOLLO_GRAPH_NAME=${{ inputs.APOLLO_GRAPH_NAME }} APOLLO_KEY=${{ secrets.APOLLO_KEY }} _APOLLO_GRAPH_VARIANT=${{ inputs.APOLLO_GRAPH_VARIANT }} APOLLO_SCHEMA_REPORTING=${{ inputs.APOLLO_SCHEMA_REPORTING }} MONGODB_DB_NAME=${{ inputs.MONGODB_DB_NAME }} MONGODB_URL=${{ secrets.MONGODB_URL }} sls deploy --verbose
