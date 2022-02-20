@@ -3,6 +3,9 @@ import { ApolloServer } from 'apollo-server-lambda';
 import { DateTimeMock } from 'graphql-scalars';
 import { resolvers } from './resolvers';
 import * as typeDefs from './schema.graphql'
+import { mongoDbProvider } from './mongodb.provider';
+
+const _mongoDbProvider = mongoDbProvider;
 
 const server = new ApolloServer({
   typeDefs: [DIRECTIVES, typeDefs],
@@ -27,4 +30,9 @@ const server = new ApolloServer({
   })
 });
 
-exports.graphqlHandler = server.createHandler();
+// TODO: Top level await!!!!!
+// await mongoDbProvider.connectAsync(
+//   environment.mongoDb.databaseName
+// );
+
+exports.graphqlHandler = server.createHandler() 

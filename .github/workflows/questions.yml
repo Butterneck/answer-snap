@@ -1,0 +1,26 @@
+name: Call a reusable workflow
+
+on:
+  push:
+    paths:
+      - questions/**/*
+
+env:
+  APOLLO_GRAPH_NAME: Answer-snap
+  APOLLO_GRAPH_VARIANT: current
+  APOLLO_SCHEMA_REPORTING: true
+  MONGODB_DB_NAME: answer-snap
+
+jobs:
+  call-deploy:
+    uses: ./.github/workflows/apollo_federated_service.yml
+    with:
+      APOLLO_GRAPH_NAME: ${{ env.APOLLO_GRAPH_NAME }}
+      APOLLO_GRAPH_VARIANT: ${{ env.APOLLO_GRAPH_VARIANT }}
+      APOLLO_SCHEMA_REPORTING: ${{ env.APOLLO_SCHEMA_REPORTING }}
+      MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
+      MONGODB_URL: ${{ secrets.MONGODB_URL }}

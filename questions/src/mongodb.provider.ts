@@ -26,8 +26,11 @@ export class MongoDbProvider {
    * @param databaseName - Database name.
    */
   async connectAsync(databaseName: string): Promise<void> {
-    await this.mongoClient.connect();
-    this.database = this.mongoClient.db(databaseName);
+    if (!this.database) {
+      console.log("New connection")
+      await this.mongoClient.connect();
+      this.database = this.mongoClient.db(databaseName);
+    }
   }
 
   /**

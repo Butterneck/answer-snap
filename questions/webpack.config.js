@@ -1,6 +1,7 @@
 const path = require('path')
 const slsw = require('serverless-webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpackNodeExternals = require('webpack-node-externals');
 
 module.exports = {
   mode: 'production',
@@ -16,6 +17,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'src/handler.js'
   },
+  externals: [webpackNodeExternals()],
   module: {
     rules: [
       {

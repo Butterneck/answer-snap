@@ -42,6 +42,8 @@ functions:
       APOLLO_SCHEMA_REPORTING: ${env:APOLLO_SCHEMA_REPORTING}
       APOLLO_KEY: ${env:APOLLO_KEY}
       APOLLO_GRAPH_REF: ${env:APOLLO_GRAPH_NAME}@${env:_APOLLO_GRAPH_VARIANT}
+      MONGODB_DB_NAME: ${env:MONGODB_DB_NAME}
+      MONGODB_URL: ${env:MONGODB_URL}
 
 plugins:
   - serverless-webpack
