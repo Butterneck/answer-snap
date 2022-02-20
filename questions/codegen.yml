@@ -1,0 +1,10 @@
+overwrite: true
+schema: "./**/*.graphql"
+documents: null
+generates:
+  ./src/graphql-codegen-typings.d.ts:
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+      - "typescript-mongodb"
+      - "typescript-document-nodes"

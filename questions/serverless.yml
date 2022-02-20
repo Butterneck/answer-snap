@@ -1,0 +1,49 @@
+service: answer-snap-questions
+
+frameworkVersion: '3'
+
+custom:
+  region: eu-west-1
+
+  webpack:
+    webpackConfig: ./webpack.config.js
+
+  apolloGraphQLFederation:
+    uploadForDeploymentRegion: ${self:custom.region}
+    graphs:
+      - name: ${env:APOLLO_GRAPH_NAME}
+        apolloKey: ${env:APOLLO_KEY}
+        url: https://v8y97hqzab.execute-api.eu-west-1.amazonaws.com/graphql
+        schema: 'src/schema.graphql'
+        variant: ${env:_APOLLO_GRAPH_VARIANT}
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ${self:custom.region}
+  stage: dev
+  iam:
+    deploymentRole: arn:aws:iam::${aws:accountId}:role/answer-snap-CloudFormationExecutionRole
+
+functions:
+  questions:
+    handler: src/handler.graphqlHandler
+    events:
+    - httpApi:
+        path: /graphql
+        method: post
+        cors: true
+    - httpApi:
+        path: /graphql
+        method: get
+        cors: true
+    environment:
+      APOLLO_GRAPH_NAME: ${env:APOLLO_GRAPH_NAME}
+      APOLLO_SCHEMA_REPORTING: ${env:APOLLO_SCHEMA_REPORTING}
+      APOLLO_KEY: ${env:APOLLO_KEY}
+      APOLLO_GRAPH_REF: ${env:APOLLO_GRAPH_NAME}@${env:_APOLLO_GRAPH_VARIANT}
+
+plugins:
+  - serverless-webpack
+  - serverless-plugin-apollo-graphql-federation
+  - serverless-offline

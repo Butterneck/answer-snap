@@ -1,0 +1,96 @@
+# Scalars
+scalar DateTime
+
+type Question @entity {
+    id: ID! @id
+    title: String! @column
+    body: String! @column
+    createdAt: DateTime! @column
+    createdBy: String! @column
+    recipient: String! @column
+}
+
+input AddQuestionInput {
+  title: String!
+  body: String!
+  recipient: String!
+}
+
+type Query {
+  """
+  Get question by ID.
+  """
+  question(id: ID!): Question
+
+  """
+  Get questions created by user.
+  """
+  questionByUser(userId: String!): [Question]
+
+  """
+  Get questions targeted to user.
+  """
+  questionByRecipients(userId: String!): [Question]
+}
+
+type Mutation {
+  """
+  Add question.
+  """
+  addQuestion(input: AddQuestionInput!): Question!
+}
+
+# directive @column(overrideType: String) on FIELD_DEFINITION
+# directive @entity(
+#   embedded: Boolean
+#   additionalFields: [AdditionalEntityFields]
+# ) on OBJECT
+# directive @id on FIELD_DEFINITION
+# directive @link(overrideType: String) on FIELD_DEFINITION
+
+# scalar DateTime
+# scalar EmailAddress
+
+# type User @entity {
+#   id: ID! @id
+#   firstName: String! @column
+#   lastName: String! @column
+#   emailAddress: EmailAddress! @column(overrideType: "string")
+#   posts: [Post]
+#   follwers: [User]
+#   following: [User] @link
+# }
+
+# type Post @entity {
+#   id: ID! @id
+#   title: String! @column
+#   content: String! @column
+#   createdAt: DateTime! @column
+#   createdBy: User! @link
+#   likedBy: [User] @link
+# }
+
+# input AddPostInput {
+#   title: String!
+#   content: String!
+# }
+
+# type Query {
+#   """
+#   Get post by ID.
+#   """
+#   post(id: ID!): Post
+
+#   """
+#   Get posts created by user.
+#   """
+#   postByUser(userId: ID!): [Post]
+# }
+
+# type Mutation {
+#   """
+#   Add post.
+#   """
+#   addPost(input: AddPostInput!): Post!
+# }
+

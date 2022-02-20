@@ -1,0 +1,28 @@
+name: Deploy master
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy-master:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+
+      - name: Serverless AWS authentication
+        run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Generate typings from graphql schemas
+        run: node_modules/.bin/graphql-codegen
+
+      - name: Deploy
+        run: APOLLO_GRAPH_NAME=${{ secrets.APOLLO_GRAPH_NAME }} APOLLO_KEY=${{ secrets.APOLLO_KEY }} APOLLO_GRAPH_VARIANT=${{ secrets.APOLLO_GRAPH_VARIANT }} APOLLO_SCHEMA_REPORTING=${{ secrets.APOLLO_SCHEMA_REPORTING }} sls deploy --verbose
