@@ -1,0 +1,33 @@
+# type Answer @entity {
+#   id: ID! @id
+#   question: String! @column
+#   body: String! @column
+# }
+
+type Answer {
+  id: ID!
+  question: String!
+  body: String!
+}
+
+input CreateAnswerInput {
+  # Example field (placeholder)
+  question: String!
+  body: String!
+}
+
+input UpdateAnswerInput {
+  id: ID!
+  body: String
+}
+
+type Query {
+  answers: [Answer]!
+  answer(id: Int!): Answer
+}
+
+type Mutation {
+  createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
+  updateAnswer(updateAnswerInput: UpdateAnswerInput!): Answer!
+  removeAnswer(id: Int!): Answer
+}
