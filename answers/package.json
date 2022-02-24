@@ -22,6 +22,8 @@
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/federation": "^0.35.1",
+    "@apollo/subgraph": "^0.3.1",
     "@graphql-codegen/typescript-mongodb": "^2.3.3",
     "@hapi/joi": "^17.1.1",
     "@nestjs/apollo": "^10.0.4",

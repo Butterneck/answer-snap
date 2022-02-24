@@ -1,17 +1,19 @@
-# type Answer @entity {
-#   id: ID! @id
-#   question: String! @column
-#   body: String! @column
-# }
+directive @column on FIELD_DEFINITION
+directive @id on FIELD_DEFINITION
+directive @entity on OBJECT
 
-type Answer {
-  id: ID!
-  question: String!
-  body: String!
+type Answer @key(fields: "id") @entity {
+  id: ID! @id
+  question: String! @column
+  body: String! @column
+}
+
+extend type Question @key(fields: "id") {
+  id: ID! @external
+  answers: [Answer]
 }
 
 input CreateAnswerInput {
-  # Example field (placeholder)
   question: String!
   body: String!
 }
@@ -21,13 +23,13 @@ input UpdateAnswerInput {
   body: String
 }
 
-type Query {
+extend type Query {
   answers: [Answer]!
-  answer(id: Int!): Answer
+  answer(id: String!): Answer
 }
 
-type Mutation {
+extend type Mutation {
   createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
   updateAnswer(updateAnswerInput: UpdateAnswerInput!): Answer!
-  removeAnswer(id: Int!): Answer
+  removeAnswer(id: String!): Answer
 }

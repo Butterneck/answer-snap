@@ -12,6 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  _FieldSet: any;
 };
 
 export type AdditionalEntityFields = {
@@ -45,7 +46,7 @@ export type MutationCreateAnswerArgs = {
 
 
 export type MutationRemoveAnswerArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 
@@ -61,7 +62,13 @@ export type Query = {
 
 
 export type QueryAnswerArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
+};
+
+export type Question = {
+  __typename?: 'Question';
+  answers?: Maybe<Array<Maybe<Answer>>>;
+  id: Scalars['ID'];
 };
 
 export type UpdateAnswerInput = {
@@ -73,6 +80,17 @@ export type UpdateAnswerInput = {
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
+export type ReferenceResolver<TResult, TReference, TContext> = (
+      reference: TReference,
+      context: TContext,
+      info: GraphQLResolveInfo
+    ) => Promise<TResult> | TResult;
+
+      type ScalarCheck<T, S> = S extends true ? T : NullableCheck<T, S>;
+      type NullableCheck<T, S> = Maybe<T> extends T ? Maybe<ListCheck<NonNullable<T>, S>> : ListCheck<T, S>;
+      type ListCheck<T, S> = T extends (infer U)[] ? NullableCheck<U, S>[] : GraphQLRecursivePick<T, S>;
+      export type GraphQLRecursivePick<T, S> = { [K in keyof T & keyof S]: ScalarCheck<T[K], S[K]> };
+    
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
@@ -144,8 +162,8 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   CreateAnswerInput: CreateAnswerInput;
   Mutation: ResolverTypeWrapper<{}>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   Query: ResolverTypeWrapper<{}>;
+  Question: ResolverTypeWrapper<Question>;
   UpdateAnswerInput: UpdateAnswerInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
@@ -158,8 +176,8 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   CreateAnswerInput: CreateAnswerInput;
   Mutation: {};
-  Int: Scalars['Int'];
   Query: {};
+  Question: Question;
   UpdateAnswerInput: UpdateAnswerInput;
   Boolean: Scalars['Boolean'];
 };
@@ -212,6 +230,7 @@ export type MapDirectiveArgs = {
 export type MapDirectiveResolver<Result, Parent, ContextType = any, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type AnswerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Answer'] = ResolversParentTypes['Answer']> = {
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Answer']>, { __typename: 'Answer' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   question?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -229,10 +248,18 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   answers?: Resolver<Array<Maybe<ResolversTypes['Answer']>>, ParentType, ContextType>;
 };
 
+export type QuestionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Question'] = ResolversParentTypes['Question']> = {
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Question']>, { __typename: 'Question' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  answers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Answer']>>>, { __typename: 'Question' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   Answer?: AnswerResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Question?: QuestionResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {

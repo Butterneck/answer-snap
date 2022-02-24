@@ -1,5 +1,4 @@
-import { Logger } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, ResolveField } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ResolveField, ResolveReference } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import { Answer, AnswerDbObject, CreateAnswerInput, UpdateAnswerInput } from 'src/generated/graphql';
 import { AnswersService } from './answers.service';
@@ -36,6 +35,11 @@ export class AnswersResolver {
   @ResolveField('id')
   get_id(answer: Answer | AnswerDbObject): string {
     return (answer as Answer).id || (answer as AnswerDbObject)._id.toString();
+  }
+
+  @ResolveReference()
+  resolveReference(reference: { __typename: string; id: string }) {
+    return this.answersService.findOne(reference.id);
   }
   
 }
